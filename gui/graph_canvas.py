@@ -125,7 +125,6 @@ class GraphCanvas(Canvas):
     def draw_loop(self, vertex):
         """
         Dibuja un bucle (self-loop) en un vértice.
-        Método desarrollado con apoyo de IA (ChatGPT, Deepseek).
         """
         x, y = self.vertice_pos[vertex]
         

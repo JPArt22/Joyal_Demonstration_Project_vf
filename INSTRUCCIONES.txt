@@ -1,0 +1,68 @@
+===============================================================
+  PROYECTO MD - INSTRUCCIONES DE EJECUCIÓN
+===============================================================
+
+EJECUCIÓN RÁPIDA
+================
+
+1. Doble clic en: run.bat
+
+2. Esperar instalación automática (solo primera vez)
+
+3. ¡Listo! La aplicación se abrirá automáticamente
+
+
+REQUISITOS
+==========
+
+- Windows 10 o superior
+- Python 3.8 o superior instalado
+- Conexión a internet (solo primera vez)
+
+
+USO DE LA APLICACIÓN
+=====================
+
+MENÚ PRINCIPAL - Dos opciones:
+
+  [1] Construir Función desde Árbol
+      → Click en vértices para conectar
+      → Seleccionar inicio y fin
+      → Desencriptar textos
+
+  [2] Construir Árbol desde Función  
+      → Ingresar función (ej: 1,2,3,6,6,6,7,8,9)
+      → Ver vértebra generada
+      → Encriptar textos
+
+  [3] Encriptar/Desencriptar Texto
+      → Cifrado Hill 9×9 independiente
+
+
+SOLUCIÓN DE PROBLEMAS
+======================
+
+❌ "Python no encontrado"
+   → Instalar desde: python.org
+
+❌ "Error al instalar"  
+   → Ejecutar run.bat como Administrador
+
+❌ La ventana no abre
+   → Revisar firewall/antivirus
+
+
+SOPORTE
+=======
+
+Universidad Nacional de Colombia
+Facultad de Ingeniería
+Bogotá, Colombia
+
+Autores:
+- Martin Lora Cano
+- Cristian Andrés Diaz Ortega  
+- Jhon Edison Prieto Artunduaga
+
+
+===============================================================

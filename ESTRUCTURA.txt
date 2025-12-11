@@ -144,8 +144,12 @@ AUTORES
 =======
 
 Universidad Nacional de Colombia
-Matemáticas Discretas
+Facultad de Ingeniería, departamento de Ingeniería de Sistemas e Industrial
 Bogotá, Colombia
+
+Martin Lora Cano
+Cristian Andrés Diaz Ortega
+Jhon Edison Prieto Artunduaga
 
 
 LICENCIA

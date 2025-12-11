@@ -5,7 +5,7 @@ Proyecto MD - Demostración de Joyal a la Fórmula de Cayley
 Aplicación interactiva para explorar la biyección entre árboles etiquetados
 y funciones, con sistema de criptografía Hill Cipher integrado.
 
-Autor: Universidad del Norte - Matemáticas Discretas
+Autor: Universidad Nacional de Colombia - Matemáticas Discretas
 """
 
 import sys

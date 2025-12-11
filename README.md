@@ -324,27 +324,24 @@ Si la matriz no es invertible módulo 30, se utiliza una matriz diagonal ajustad
 
 ## 👥 Autores
 
-**Universidad Nacional de Colombia** - Bogotá, Colombia  
-Curso: Matemáticas Discretas
-**Proyecto**: Demostración de Joyal a la Fórmula de Cayley  
+**Universidad Nacional de Colombia**  
+Facultad de Ingeniería, departamento de Ingeniería de Sistemas e Industrial  
+Bogotá, Colombia
+
+Curso: Matemáticas Discretas  
+Proyecto: Demostración de Joyal a la Fórmula de Cayley
 
 ### Equipo de Desarrollo
 
-- **[Nombre del Autor 1]** - Implementación de lógica de grafos
-- **[Nombre del Autor 2]** - Desarrollo de interfaz gráfica
-- **[Nombre del Autor 3]** - Sistema de criptografía
+- Martin Lora Cano
+- Cristian Andrés Diaz Ortega
+- Jhon Edison Prieto Artunduaga
 
 ### Agradecimientos
 
 - **André Joyal**: Por la elegante demostración combinatoria
 - **Arthur Cayley**: Por el teorema fundamental
 - **Comunidad Open Source**: Por las herramientas utilizadas
-
-### Herramientas de IA
-
-Algunos métodos fueron desarrollados con apoyo de herramientas de inteligencia artificial:
-- **ChatGPT** (OpenAI): Algoritmo de Bareiss, generación de matrices
-- **Deepseek**: Optimización de detección de ciclos, renderizado de bucles
 
 ## 📚 Referencias
 
@@ -406,11 +403,9 @@ Si encuentra algún error o desea contribuir al proyecto:
 
 ## 📞 Contacto
 
-**Universidad del Norte**  
-Departamento de Matemáticas y Estadística  
-Barranquilla, Colombia
-
-Email: [contacto@uninorte.edu.co](mailto:contacto@uninorte.edu.co)
+**Universidad Nacional de Colombia**  
+Facultad de Ingeniería, departamento de Ingeniería de Sistemas e Industrial  
+Bogotá, Colombia
 
 ---
 

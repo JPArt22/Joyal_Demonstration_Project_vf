@@ -28,7 +28,6 @@ def modinv(a, m):
 def determinante_bareiss(mat):
     """
     Calcula el determinante usando el algoritmo de Bareiss.
-    Este método fue implementado con apoyo de herramientas de IA (ChatGPT, Deepseek).
     """
     n = len(mat)
     if n == 0:
@@ -132,7 +131,6 @@ def is_invertible_mod(mat, mod):
 def get_matrix_from_function(funcion, MOD=30, dim=9):
     """
     Genera una matriz invertible 9×9 a partir de una función.
-    Este método fue implementado con apoyo de herramientas de IA (ChatGPT, Deepseek).
     """
     clean = [(0 if v is None else int(v)) for v in funcion]
     func = [clean[i % len(clean)] for i in range(dim)]
