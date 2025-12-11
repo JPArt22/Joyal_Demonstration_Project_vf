@@ -4,6 +4,7 @@ Permite al usuario construir un árbol y generar una función, con opción de de
 """
 
 import customtkinter as ctk
+import random
 from gui.graph_canvas import GraphCanvas
 from logic import GraphLogic, CryptoEngine
 
@@ -111,14 +112,26 @@ class TreeView(ctk.CTkFrame):
         # Scroll para info
         scroll = ctk.CTkScrollableFrame(
             right,
-            fg_color="#313244",
+            fg_color="#1e1e2e",
             width=340,
-            height=400,
-            orientation="both"
+            height=280
         )
-        scroll.pack(padx=20, pady=10, fill="both", expand=True)
+        scroll.pack(padx=20, pady=10, fill="x")
         
         self.info_container = scroll
+        
+        # Botón para generar árbol aleatorio
+        btn_random = ctk.CTkButton(
+            right,
+            text="🎲 Construir Árbol Aleatorio",
+            fg_color="#89b4fa",
+            hover_color="#b4befe",
+            text_color="#1e1e2e",
+            font=("Segoe UI", 13, "bold"),
+            height=40,
+            command=self._generar_arbol_aleatorio
+        )
+        btn_random.pack(pady=10, padx=20, fill="x")
         
         # Botón reset
         btn_reset = ctk.CTkButton(
@@ -243,15 +256,94 @@ class TreeView(ctk.CTkFrame):
         for widget in self.info_container.winfo_children():
             widget.destroy()
         
+        # Mostrar mensaje de ayuda inicial
+        if self.estado < 2:
+            lbl_help = ctk.CTkLabel(
+                self.info_container,
+                text="INSTRUCCIONES",
+                font=("Segoe UI", 16, "bold"),
+                text_color="#ffffff"
+            )
+            lbl_help.pack(pady=(15, 10), padx=10)
+            
+            lbl_step = ctk.CTkLabel(
+                self.info_container,
+                text=f"Conecte aristas para formar un arbol\n\nUn arbol con {self.n} vertices debe tener\nexactamente {self.n-1} aristas.\n\nNo se permiten ciclos\n\nAristas conectadas: {len(self.graph_logic.aristas)}",
+                font=("Segoe UI", 13),
+                text_color="#ffffff",
+                justify="center",
+                wraplength=300
+            )
+            lbl_step.pack(pady=15, padx=15)
+            
+            if len(self.graph_logic.aristas) > 0:
+                sep = ctk.CTkFrame(self.info_container, height=2, fg_color="#45475a")
+                sep.pack(fill="x", pady=10, padx=20)
+                
+                lbl_edges = ctk.CTkLabel(
+                    self.info_container,
+                    text="Aristas actuales:",
+                    font=("Segoe UI", 13, "bold"),
+                    text_color="#ffffff"
+                )
+                lbl_edges.pack(pady=(10, 5), padx=10)
+                
+                for v1, v2 in self.graph_logic.aristas:
+                    edge_str = f"{v1+1} <-> {v2+1}"
+                    lbl_edge = ctk.CTkLabel(
+                        self.info_container,
+                        text=edge_str,
+                        font=("Consolas", 12),
+                        text_color="#89b4fa"
+                    )
+                    lbl_edge.pack(pady=2, padx=10)
+            return
+        
+        # Mostrar mensaje cuando árbol está completo pero falta seleccionar vértices
+        if self.estado in [2, 3]:
+            lbl_help = ctk.CTkLabel(
+                self.info_container,
+                text="SELECCION DE VERTICES",
+                font=("Segoe UI", 16, "bold"),
+                text_color="#ffffff"
+            )
+            lbl_help.pack(pady=(15, 10), padx=10)
+            
+            status_text = "Arbol completado\n\n"
+            if self.vertice_ini is None:
+                status_text += ">> Seleccione el vertice INICIAL\n(punto de partida de la vertebra)"
+            else:
+                status_text += f"Vertice inicial: {self.vertice_ini + 1}\n\n"
+                status_text += ">> Seleccione el vertice FINAL\n(punto de llegada de la vertebra)"
+            
+            lbl_status = ctk.CTkLabel(
+                self.info_container,
+                text=status_text,
+                font=("Segoe UI", 13),
+                text_color="#ffffff",
+                justify="center",
+                wraplength=300
+            )
+            lbl_status.pack(pady=15, padx=15)
+            
+            lbl_edges = ctk.CTkLabel(
+                self.info_container,
+                text=f"Aristas del arbol: {len(self.graph_logic.aristas)}",
+                font=("Segoe UI", 12),
+                text_color="#89b4fa"
+            )
+            lbl_edges.pack(pady=10, padx=10)
+            return
+        
         if self.estado >= 4 and None not in self.funcion:
             # Mostrar función
             lbl = ctk.CTkLabel(
                 self.info_container,
-                text="Función f(V):",
+                text="Funcion f(V):",
                 font=("Segoe UI", 14, "bold"),
-                text_color="#cdd6f4"
+                text_color="#ffffff"
             )
-            lbl.pack(anchor="w", pady=(5, 2))
+            lbl.pack(anchor="w", pady=(10, 5), padx=10)
             
             func_str = ", ".join(str(f + 1) for f in self.funcion if f is not None)
             lbl_func = ctk.CTkLabel(
@@ -259,52 +351,102 @@ class TreeView(ctk.CTkFrame):
                 text=f"[{func_str}]",
                 font=("Consolas", 13),
                 text_color="#89b4fa",
-                wraplength=0
+                wraplength=300
             )
-            lbl_func.pack(anchor="w", pady=(0, 10))
+            lbl_func.pack(anchor="w", pady=(0, 15), padx=10)
             
             # Vértebra
             if self.camino_vertebra:
+                sep = ctk.CTkFrame(self.info_container, height=2, fg_color="#45475a")
+                sep.pack(fill="x", pady=10, padx=20)
+                
                 lbl = ctk.CTkLabel(
                     self.info_container,
-                    text="Vértebra (inicio → fin):",
+                    text="Vertebra (inicio -> fin):",
                     font=("Segoe UI", 14, "bold"),
-                    text_color="#cdd6f4"
+                    text_color="#ffffff"
                 )
-                lbl.pack(anchor="w", pady=(5, 2))
+                lbl.pack(anchor="w", pady=(10, 5), padx=10)
                 
-                vert_str = " → ".join(str(v + 1) for v in self.camino_vertebra)
+                vert_str = " -> ".join(str(v + 1) for v in self.camino_vertebra)
                 lbl_vert = ctk.CTkLabel(
                     self.info_container,
                     text=vert_str,
                     font=("Consolas", 13),
                     text_color="#f38ba8",
-                    wraplength=0
+                    wraplength=300
                 )
-                lbl_vert.pack(anchor="w", pady=(0, 10))
+                lbl_vert.pack(anchor="w", pady=(0, 15), padx=10)
             
             # Tabla V y f(V)
             if self.camino_orden and self.camino_inv:
+                sep = ctk.CTkFrame(self.info_container, height=2, fg_color="#45475a")
+                sep.pack(fill="x", pady=10, padx=20)
+                
                 lbl = ctk.CTkLabel(
                     self.info_container,
-                    text="Mapeo (V → f(V)):",
+                    text="Mapeo (V -> f(V)):",
                     font=("Segoe UI", 14, "bold"),
-                    text_color="#cdd6f4"
+                    text_color="#ffffff"
                 )
-                lbl.pack(anchor="w", pady=(5, 2))
+                lbl.pack(anchor="w", pady=(10, 5), padx=10)
                 
                 for i in range(len(self.camino_orden)):
                     v = self.camino_orden[i]
                     fv = self.camino_inv[i]
                     
-                    map_str = f"{v + 1} → {fv + 1}"
+                    map_str = f"{v + 1} -> {fv + 1}"
                     lbl_map = ctk.CTkLabel(
                         self.info_container,
                         text=map_str,
                         font=("Consolas", 13),
                         text_color="#a6e3a1"
                     )
-                    lbl_map.pack(anchor="w")
+                    lbl_map.pack(anchor="w", pady=2, padx=10)
+    
+    def _generar_arbol_aleatorio(self):
+        """Genera un árbol aleatorio con n vértices."""
+        # Resetear primero
+        self._reset()
+        
+        # Usar algoritmo de Prüfer para generar un árbol aleatorio
+        # Generar secuencia de Prüfer (n-2 números entre 0 y n-1)
+        if self.n == 1:
+            self.estado = 2  # Solo un vértice, ya está listo
+            self._update_display()
+            return
+        
+        # Para n=2, solo hay una arista posible
+        if self.n == 2:
+            self.graph_logic.agregar_arista(0, 1)
+            self.estado = 2
+            self._update_display()
+            return
+        
+        # Para n >= 3, usar algoritmo de Kruskal aleatorio
+        vertices = list(range(self.n))
+        aristas_posibles = []
+        
+        # Generar todas las aristas posibles
+        for i in range(self.n):
+            for j in range(i + 1, self.n):
+                aristas_posibles.append((i, j))
+        
+        # Barajar las aristas
+        random.shuffle(aristas_posibles)
+        
+        # Agregar aristas hasta tener n-1 (árbol completo)
+        aristas_agregadas = 0
+        for v1, v2 in aristas_posibles:
+            if aristas_agregadas == self.n - 1:
+                break
+            
+            if self.graph_logic.agregar_arista(v1, v2):
+                aristas_agregadas += 1
+        
+        # Cambiar a fase de elegir vértices
+        self.estado = 2
+        self._update_display()
     
     def _reset(self):
         """Reinicia la vista."""

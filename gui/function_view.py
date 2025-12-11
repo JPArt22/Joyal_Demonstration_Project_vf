@@ -4,6 +4,7 @@ Permite al usuario ingresar una función y visualizar el árbol resultante, con 
 """
 
 import customtkinter as ctk
+import random
 from gui.graph_canvas import GraphCanvas
 from logic import GraphLogic, CryptoEngine
 
@@ -27,8 +28,6 @@ class FunctionView(ctk.CTkFrame):
         self.aristas_vert = []
         self.aristas_dir = []
         self.estado = 0  # 0: ingresar, 1: mostrar bosque, 2: mostrar árbol
-        self.modo_encriptar = False
-        self.texto_resultado = ""
         
         self._setup_ui()
     
@@ -95,7 +94,7 @@ class FunctionView(ctk.CTkFrame):
             font=("Segoe UI", 18, "bold"),
             text_color="#cdd6f4"
         )
-        lbl_title.pack(pady=(20, 10))
+        lbl_title.pack(pady=(10, 5))
         
         # Entry para función
         self.entry_funcion = ctk.CTkEntry(
@@ -104,7 +103,7 @@ class FunctionView(ctk.CTkFrame):
             height=40,
             font=("Segoe UI", 13)
         )
-        self.entry_funcion.pack(padx=20, pady=10, fill="x")
+        self.entry_funcion.pack(padx=20, pady=5, fill="x")
         
         # Botón construir
         self.btn_construir = ctk.CTkButton(
@@ -117,7 +116,7 @@ class FunctionView(ctk.CTkFrame):
             height=40,
             command=self._construir_bosque
         )
-        self.btn_construir.pack(padx=20, pady=5, fill="x")
+        self.btn_construir.pack(padx=20, pady=3, fill="x")
         
         # Mensaje de error
         self.lbl_error = ctk.CTkLabel(
@@ -127,91 +126,38 @@ class FunctionView(ctk.CTkFrame):
             text_color="#f38ba8",
             wraplength=260
         )
-        self.lbl_error.pack(pady=5)
+        self.lbl_error.pack(pady=3)
         
-        # Panel de información (movido más arriba)
-        info_frame = ctk.CTkFrame(right, fg_color="#313244")
-        info_frame.pack(padx=20, pady=(5, 10), fill="both", expand=True)
-        
+        # Título de información
         lbl_info = ctk.CTkLabel(
-            info_frame,
+            right,
             text="Información",
-            font=("Segoe UI", 15, "bold"),
+            font=("Segoe UI", 18, "bold"),
             text_color="#cdd6f4"
         )
         lbl_info.pack(pady=(10, 5))
         
+        # Panel de información
         self.info_scroll = ctk.CTkScrollableFrame(
-            info_frame,
-            fg_color="#45475a",
+            right,
+            fg_color="#1e1e2e",
             width=340,
-            height=250,
-            orientation="both"
+            height=110
         )
-        self.info_scroll.pack(padx=10, pady=5, fill="both", expand=True)
+        self.info_scroll.pack(padx=20, pady=5, fill="x")
         
-        # Panel de encriptación
-        crypto_frame = ctk.CTkFrame(right, fg_color="#313244")
-        crypto_frame.pack(padx=20, pady=10, fill="x")
-        
-        lbl_crypto = ctk.CTkLabel(
-            crypto_frame,
-            text="🔒 ENCRIPTACIÓN",
-            font=("Segoe UI", 15, "bold"),
-            text_color="#cdd6f4"
-        )
-        lbl_crypto.pack(pady=(10, 5))
-        
-        self.lbl_crypto_status = ctk.CTkLabel(
-            crypto_frame,
-            text="Ingrese una función para encriptar",
-            font=("Segoe UI", 10),
-            text_color="#6c7086"
-        )
-        self.lbl_crypto_status.pack(pady=(0, 5))
-        
-        self.btn_encrypt = ctk.CTkButton(
-            crypto_frame,
-            text="✓ ENCRIPTAR TEXTO",
-            fg_color="#a6e3a1",
-            hover_color="#94e2d5",
-            text_color="#1e1e2e",
-            font=("Segoe UI", 13, "bold"),
-            height=40,
-            command=self._toggle_encrypt,
-            state="disabled"
-        )
-        self.btn_encrypt.pack(pady=5, padx=10, fill="x")
-        
-        self.entry_crypto = ctk.CTkEntry(
-            crypto_frame,
-            placeholder_text="Ingrese texto a encriptar aquí...",
-            height=40,
-            font=("Segoe UI", 13)
-        )
-        self.entry_crypto.pack(pady=5, padx=10, fill="x")
-        self.entry_crypto.pack_forget()
-        
-        self.btn_process = ctk.CTkButton(
-            crypto_frame,
-            text="Encriptar",
+        # Botón para generar función aleatoria
+        btn_random = ctk.CTkButton(
+            right,
+            text="🎲 Generar Función Aleatoria",
             fg_color="#89b4fa",
             hover_color="#b4befe",
             text_color="#1e1e2e",
-            font=("Segoe UI", 12, "bold"),
-            command=self._process_encrypt
+            font=("Segoe UI", 13, "bold"),
+            height=40,
+            command=self._generar_funcion_aleatoria
         )
-        self.btn_process.pack(pady=5, padx=10, fill="x")
-        self.btn_process.pack_forget()
-        
-        self.lbl_resultado = ctk.CTkLabel(
-            crypto_frame,
-            text="",
-            font=("Segoe UI", 12),
-            text_color="#a6e3a1",
-            wraplength=250
-        )
-        self.lbl_resultado.pack(pady=5, padx=10)
+        btn_random.pack(pady=5, padx=20, fill="x")
         
         # Botón reset
         btn_reset = ctk.CTkButton(
@@ -223,7 +169,7 @@ class FunctionView(ctk.CTkFrame):
             font=("Segoe UI", 13, "bold"),
             command=self._reset
         )
-        btn_reset.pack(pady=10, padx=20, fill="x")
+        btn_reset.pack(pady=5, padx=20, fill="x")
         
         self._update_display()
     
@@ -262,14 +208,6 @@ class FunctionView(ctk.CTkFrame):
             
             self.lbl_error.configure(text="")
             self.btn_construir.configure(text="Convertir a Árbol", command=self._convertir_arbol)
-            
-            # Configurar encriptación
-            self.crypto_engine.set_key_from_function(self.funcion)
-            self.btn_encrypt.configure(state="normal")
-            self.lbl_crypto_status.configure(
-                text="✓ Función lista - Ya puede encriptar",
-                text_color="#a6e3a1"
-            )
             
             self._update_display()
             
@@ -314,132 +252,145 @@ class FunctionView(ctk.CTkFrame):
         for widget in self.info_scroll.winfo_children():
             widget.destroy()
         
+        # Mostrar mensaje de ayuda inicial
+        if self.estado == 0:
+            lbl_help = ctk.CTkLabel(
+                self.info_scroll,
+                text="COMO USAR",
+                font=("Segoe UI", 16, "bold"),
+                text_color="#ffffff"
+            )
+            lbl_help.pack(pady=(15, 10), padx=10)
+            
+            lbl_step = ctk.CTkLabel(
+                self.info_scroll,
+                text=f"1. Ingrese una funcion f(V)\n   con {self.n} valores\n\n2. Los valores deben estar\n   entre 1 y {self.n}\n\n3. Separe los valores\n   por comas\n\nEjemplo:\n1,2,3,4,5,6,7,8,9",
+                font=("Segoe UI", 13),
+                text_color="#ffffff",
+                justify="left",
+                wraplength=300
+            )
+            lbl_step.pack(pady=15, padx=15)
+            
+            sep = ctk.CTkFrame(self.info_scroll, height=2, fg_color="#6c7086")
+            sep.pack(fill="x", pady=15, padx=20)
+            
+            lbl_info = ctk.CTkLabel(
+                self.info_scroll,
+                text="La demostracion de Joyal\nconvertira la funcion en un arbol\netiquetado.",
+                font=("Segoe UI", 11),
+                text_color="#ffffff",
+                justify="center",
+                wraplength=300
+            )
+            lbl_info.pack(pady=(10, 15), padx=10)
+            return
+        
         if self.estado >= 1 and None not in self.funcion:
             # Mostrar función
             lbl = ctk.CTkLabel(
                 self.info_scroll,
-                text="Función f(V):",
+                text="Funcion f(V):",
                 font=("Segoe UI", 14, "bold"),
-                text_color="#cdd6f4"
+                text_color="#ffffff"
             )
-            lbl.pack(anchor="w", pady=(5, 2))
+            lbl.pack(anchor="w", pady=(10, 5), padx=10)
             
             func_str = ", ".join(str(f + 1) for f in self.funcion)
             lbl_func = ctk.CTkLabel(
                 self.info_scroll,
                 text=f"[{func_str}]",
-                font=("Consolas", 13),
+                font=("Consolas", 12),
                 text_color="#89b4fa",
-                wraplength=0
+                wraplength=300,
+                justify="center"
             )
-            lbl_func.pack(anchor="w", pady=(0, 10))
+            lbl_func.pack(pady=(0, 15), padx=10)
             
             # Vértices en ciclo
             if self.camino_orden:
+                sep = ctk.CTkFrame(self.info_scroll, height=2, fg_color="#6c7086")
+                sep.pack(fill="x", pady=10, padx=20)
+                
                 lbl = ctk.CTkLabel(
                     self.info_scroll,
-                    text="Vértices en ciclos:",
+                    text="Vertices en ciclos:",
                     font=("Segoe UI", 14, "bold"),
-                    text_color="#cdd6f4"
+                    text_color="#ffffff"
                 )
-                lbl.pack(anchor="w", pady=(5, 2))
+                lbl.pack(anchor="w", pady=(10, 5), padx=10)
                 
                 ciclo_str = ", ".join(str(v + 1) for v in self.camino_orden)
                 lbl_ciclo = ctk.CTkLabel(
                     self.info_scroll,
                     text=f"[{ciclo_str}]",
-                    font=("Consolas", 13),
+                    font=("Consolas", 12),
                     text_color="#f9e2af",
-                    wraplength=0
+                    wraplength=300,
+                    justify="center"
                 )
-                lbl_ciclo.pack(anchor="w", pady=(0, 10))
+                lbl_ciclo.pack(pady=(0, 15), padx=10)
             
             # Vértebra
             if self.camino_vertebra and self.estado >= 2:
+                sep = ctk.CTkFrame(self.info_scroll, height=2, fg_color="#6c7086")
+                sep.pack(fill="x", pady=10, padx=20)
+                
                 lbl = ctk.CTkLabel(
                     self.info_scroll,
-                    text="Vértebra:",
+                    text="Vertebra:",
                     font=("Segoe UI", 14, "bold"),
-                    text_color="#cdd6f4"
+                    text_color="#ffffff"
                 )
-                lbl.pack(anchor="w", pady=(5, 2))
+                lbl.pack(anchor="w", pady=(10, 5), padx=10)
                 
-                vert_str = " → ".join(str(v + 1) for v in self.camino_vertebra)
+                vert_str = " -> ".join(str(v + 1) for v in self.camino_vertebra)
                 lbl_vert = ctk.CTkLabel(
                     self.info_scroll,
                     text=vert_str,
-                    font=("Consolas", 13),
+                    font=("Consolas", 12),
                     text_color="#f38ba8",
-                    wraplength=0
+                    wraplength=300,
+                    justify="center"
                 )
-                lbl_vert.pack(anchor="w", pady=(0, 10))
+                lbl_vert.pack(pady=(0, 15), padx=10)
                 
                 # Mapeo
+                sep = ctk.CTkFrame(self.info_scroll, height=2, fg_color="#6c7086")
+                sep.pack(fill="x", pady=10, padx=20)
+                
                 lbl = ctk.CTkLabel(
                     self.info_scroll,
-                    text="Mapeo (V → f(V)):",
+                    text="Mapeo (V -> f(V)):",
                     font=("Segoe UI", 14, "bold"),
-                    text_color="#cdd6f4"
+                    text_color="#ffffff"
                 )
-                lbl.pack(anchor="w", pady=(5, 2))
+                lbl.pack(anchor="w", pady=(10, 5), padx=10)
                 
                 for i in range(len(self.camino_orden)):
                     v = self.camino_orden[i]
                     fv = self.camino_inv[i]
                     
-                    map_str = f"{v + 1} → {fv + 1}"
+                    map_str = f"{v + 1} -> {fv + 1}"
                     lbl_map = ctk.CTkLabel(
                         self.info_scroll,
                         text=map_str,
-                        font=("Consolas", 13),
+                        font=("Consolas", 12),
                         text_color="#a6e3a1"
                     )
-                    lbl_map.pack(anchor="w")
+                    lbl_map.pack(anchor="w", pady=2, padx=10)
     
-    def _toggle_encrypt(self):
-        """Activa/desactiva el modo encriptación."""
-        self.modo_encriptar = not self.modo_encriptar
+    def _generar_funcion_aleatoria(self):
+        """Genera una función aleatoria con n valores."""
+        # Generar función aleatoria (cada valor puede ser de 1 a n)
+        funcion_aleatoria = [random.randint(1, self.n) for _ in range(self.n)]
         
-        if self.modo_encriptar:
-            self.btn_encrypt.configure(text="✗ Cerrar Encriptación", fg_color="#f38ba8")
-            self.entry_crypto.pack(pady=5, padx=10, fill="x")
-            self.btn_process.pack(pady=5, padx=10, fill="x")
-            self.lbl_crypto_status.configure(
-                text="Ingrese texto plano y presione el botón",
-                text_color="#89b4fa"
-            )
-        else:
-            self.btn_encrypt.configure(text="✓ ENCRIPTAR TEXTO", fg_color="#a6e3a1")
-            self.entry_crypto.pack_forget()
-            self.btn_process.pack_forget()
-            self.lbl_resultado.configure(text="")
-            self.lbl_crypto_status.configure(
-                text="✓ Función lista - Ya puede encriptar",
-                text_color="#a6e3a1"
-            )
-    
-    def _process_encrypt(self):
-        """Procesa la encriptación."""
-        texto = self.entry_crypto.get()
+        # Colocar en el entry
+        self.entry_funcion.delete(0, "end")
+        self.entry_funcion.insert(0, ",".join(map(str, funcion_aleatoria)))
         
-        if not texto:
-            self.lbl_resultado.configure(
-                text="Por favor ingrese texto",
-                text_color="#f38ba8"
-            )
-            return
-        
-        try:
-            resultado = self.crypto_engine.encrypt(texto)
-            self.lbl_resultado.configure(
-                text=f"Encriptado:\n{resultado}",
-                text_color="#a6e3a1"
-            )
-        except Exception as e:
-            self.lbl_resultado.configure(
-                text=f"Error: {str(e)}",
-                text_color="#f38ba8"
-            )
+        # Construir automáticamente
+        self._construir_bosque()
     
     def _reset(self):
         """Reinicia la vista."""
@@ -453,26 +404,15 @@ class FunctionView(ctk.CTkFrame):
         self.aristas_vert = []
         self.aristas_dir = []
         self.estado = 0
-        self.modo_encriptar = False
         
         self.entry_funcion.delete(0, "end")
-        self.entry_crypto.delete(0, "end")
         self.lbl_error.configure(text="")
-        self.lbl_resultado.configure(text="")
         
         self.btn_construir.configure(
             text="Construir Bosque",
             command=self._construir_bosque,
             state="normal"
         )
-        self.btn_encrypt.configure(state="disabled")
-        self.lbl_crypto_status.configure(
-            text="Ingrese una función para encriptar",
-            text_color="#6c7086"
-        )
-        
-        if self.modo_encriptar:
-            self._toggle_encrypt()
         
         self._update_display()
     
