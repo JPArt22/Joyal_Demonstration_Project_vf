@@ -40,7 +40,7 @@ La demostración utiliza el concepto de **vértebra**: un camino simple desde un
    - **Desencriptación** de textos usando la función generada
 
 2. **Construcción de Árbol desde Función**
-   - Ingreso de función como lista de 9 valores
+   - Ingreso de función como lista de n valores
    - Visualización del bosque funcional (con ciclos)
    - Conversión automática a árbol con vértebra
    - Identificación de vértices en ciclos
@@ -139,9 +139,9 @@ customtkinter>=5.0.0   # Interfaz gráfica moderna
 
 ### Modo 1: Construir Función desde Árbol
 
-1. Elegir el número de n vértices que deseamos
-   Elija la cantidad de n vértices que desea para continua
-
+1. **Elegir el número de n vértices que deseamos**
+   - Elija la cantidad de n vértices que desea para continua
+   
 2. **Conectar Vértices**:
    - Click en un vértice para seleccionarlo
    - Click en otro vértice para conectarlos
