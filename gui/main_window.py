@@ -16,7 +16,7 @@ class MainWindow(ctk.CTk):
         super().__init__()
         
         # Configuración de la ventana
-        self.title("Proyecto MD - Demostración Joyal de la Fórmula de Cayley")
+        self.title("Proyecto MD I - Demostración Joyal de la Fórmula de Cayley")
         self.geometry("1600x900")
         
         # Maximizar ventana al iniciar
@@ -81,7 +81,7 @@ class MainWindow(ctk.CTk):
         
         title = ctk.CTkLabel(
             title_frame,
-            text="Proyecto MD",
+            text="Proyecto MD I",
             font=("Segoe UI", 48, "bold"),
             text_color="#cdd6f4"
         )
@@ -155,7 +155,7 @@ class MainWindow(ctk.CTk):
         # Footer
         footer = ctk.CTkLabel(
             center,
-            text="Matemáticas Discretas • Universidad Nacional de Colombia",
+            text="Matemáticas Discretas I • Universidad Nacional de Colombia\nAgradecimineto al profesor Sergio Alejandro Carrillo Torres",
             font=("Segoe UI", 11),
             text_color="#585b70"
         )

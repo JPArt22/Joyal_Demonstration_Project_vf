@@ -118,69 +118,6 @@ class TreeView(ctk.CTkFrame):
         
         self.info_container = scroll
         
-        # Área de desencriptado
-        crypto_frame = ctk.CTkFrame(right, fg_color="#313244")
-        crypto_frame.pack(padx=20, pady=10, fill="x")
-        
-        lbl_crypto = ctk.CTkLabel(
-            crypto_frame,
-            text="🔓 DESENCRIPTACIÓN",
-            font=("Segoe UI", 15, "bold"),
-            text_color="#cdd6f4"
-        )
-        lbl_crypto.pack(pady=(10, 5))
-        
-        self.lbl_crypto_status = ctk.CTkLabel(
-            crypto_frame,
-            text="Complete el árbol para desencriptar",
-            font=("Segoe UI", 10),
-            text_color="#6c7086"
-        )
-        self.lbl_crypto_status.pack(pady=(0, 5))
-        
-        self.btn_decrypt = ctk.CTkButton(
-            crypto_frame,
-            text="✓ DESENCRIPTAR TEXTO",
-            fg_color="#a6e3a1",
-            hover_color="#94e2d5",
-            text_color="#1e1e2e",
-            font=("Segoe UI", 13, "bold"),
-            height=40,
-            command=self._toggle_decrypt,
-            state="disabled"
-        )
-        self.btn_decrypt.pack(pady=5, padx=10, fill="x")
-        
-        self.entry_crypto = ctk.CTkEntry(
-            crypto_frame,
-            placeholder_text="Ingrese texto cifrado aquí...",
-            height=40,
-            font=("Segoe UI", 13)
-        )
-        self.entry_crypto.pack(pady=5, padx=10, fill="x")
-        self.entry_crypto.pack_forget()
-        
-        self.btn_process = ctk.CTkButton(
-            crypto_frame,
-            text="Desencriptar",
-            fg_color="#89b4fa",
-            hover_color="#b4befe",
-            text_color="#1e1e2e",
-            font=("Segoe UI", 12, "bold"),
-            command=self._process_decrypt
-        )
-        self.btn_process.pack(pady=5, padx=10, fill="x")
-        self.btn_process.pack_forget()
-        
-        self.lbl_resultado = ctk.CTkLabel(
-            crypto_frame,
-            text="",
-            font=("Segoe UI", 11),
-            text_color="#a6e3a1",
-            wraplength=250
-        )
-        self.lbl_resultado.pack(pady=5, padx=10)
-        
         # Botón reset
         btn_reset = ctk.CTkButton(
             right,
@@ -249,11 +186,6 @@ class TreeView(ctk.CTkFrame):
         
         # Configurar clave de encriptación
         self.crypto_engine.set_key_from_function(self.funcion)
-        self.btn_decrypt.configure(state="normal")
-        self.lbl_crypto_status.configure(
-            text="✓ Función lista - Ya puede desencriptar",
-            text_color="#a6e3a1"
-        )
     
     def _update_display(self):
         """Actualiza la visualización."""
@@ -273,7 +205,7 @@ class TreeView(ctk.CTkFrame):
         
         # Actualizar mensaje de estado
         mensajes = [
-            "PASO 1: Conecte todos los vértices (9 vértices, 8 aristas)",
+            "PASO 1: Conecte todos los vértices",
             "ERROR: Se detectó un ciclo. Los árboles no pueden tener ciclos.\nIntente otra conexión.",
             "PASO 2: Árbol completado. Ahora seleccione el VÉRTICE INICIAL",
             "PASO 3: Ahora seleccione el VÉRTICE FINAL\n(puede ser el mismo que el inicial)",
@@ -370,51 +302,6 @@ class TreeView(ctk.CTkFrame):
                     )
                     lbl_map.pack(anchor="w")
     
-    def _toggle_decrypt(self):
-        """Activa/desactiva el modo desencriptación."""
-        self.modo_desencriptar = not self.modo_desencriptar
-        
-        if self.modo_desencriptar:
-            self.btn_decrypt.configure(text="✗ Cerrar Desencriptación", fg_color="#f38ba8")
-            self.entry_crypto.pack(pady=5, padx=10, fill="x")
-            self.btn_process.pack(pady=5, padx=10, fill="x")
-            self.lbl_crypto_status.configure(
-                text="Ingrese texto cifrado y presione el botón",
-                text_color="#89b4fa"
-            )
-        else:
-            self.btn_decrypt.configure(text="✓ DESENCRIPTAR TEXTO", fg_color="#a6e3a1")
-            self.entry_crypto.pack_forget()
-            self.btn_process.pack_forget()
-            self.lbl_resultado.configure(text="")
-            self.lbl_crypto_status.configure(
-                text="✓ Función lista - Ya puede desencriptar",
-                text_color="#a6e3a1"
-            )
-    
-    def _process_decrypt(self):
-        """Procesa la desencriptación."""
-        texto = self.entry_crypto.get()
-        
-        if not texto:
-            self.lbl_resultado.configure(
-                text="Por favor ingrese texto",
-                text_color="#f38ba8"
-            )
-            return
-        
-        try:
-            resultado = self.crypto_engine.decrypt(texto)
-            self.lbl_resultado.configure(
-                text=f"Desencriptado:\n{resultado}",
-                text_color="#a6e3a1"
-            )
-        except Exception as e:
-            self.lbl_resultado.configure(
-                text=f"Error: {str(e)}",
-                text_color="#f38ba8"
-            )
-    
     def _reset(self):
         """Reinicia la vista."""
         self.graph_logic.reset()
@@ -432,17 +319,6 @@ class TreeView(ctk.CTkFrame):
         self.estado = 0
         self.modo_desencriptar = False
         self.texto_resultado = ""
-        
-        self.btn_decrypt.configure(state="disabled")
-        self.lbl_crypto_status.configure(
-            text="Complete el árbol para desencriptar",
-            text_color="#6c7086"
-        )
-        if self.modo_desencriptar:
-            self._toggle_decrypt()
-        
-        self.entry_crypto.delete(0, "end")
-        self.lbl_resultado.configure(text="")
         
         self._update_display()
     
