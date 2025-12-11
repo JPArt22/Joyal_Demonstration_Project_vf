@@ -8,7 +8,7 @@
 
 **Proyecto MD** es una aplicación interactiva de escritorio que implementa la demostración combinatoria de André Joyal para la **Fórmula de Cayley**, la cual establece que existen exactamente $n^{n-2}$ árboles etiquetados con $n$ vértices.
 
-La aplicación permite a los usuarios explorar la biyección entre árboles etiquetados de 9 vértices y funciones $f: V \rightarrow V$, además de implementar un sistema de **cifrado Hill Cipher** de 9×9 basado en las funciones generadas.
+La aplicación permite a los usuarios explorar la biyección entre árboles etiquetados de n vértices y funciones $f: V \rightarrow V$, además de implementar un sistema de **cifrado Hill Cipher** de 9×9 basado en las funciones generadas.
 
 ### Teorema de Cayley
 
@@ -137,26 +137,26 @@ customtkinter>=5.0.0   # Interfaz gráfica moderna
 
 ## Guía de Uso
 
-### Modo 1: Construir Función desde Árbol
-
-1. **Elegir el número de n vértices que deseamos**
+### Elegir el número de n vértices que deseamos**
    - Elija la cantidad de n vértices que desea para continua
+
+### Modo 1: Construir Función desde Árbol
    
-2. **Conectar Vértices**:
+1. **Conectar Vértices**:
    - Click en un vértice para seleccionarlo
    - Click en otro vértice para conectarlos
    - Conecte todos los vértices sin formar ciclos
 
-3. **Seleccionar Vértices Especiales**:
+2. **Seleccionar Vértices Especiales**:
    - Una vez conectado el árbol, seleccione el **vértice inicial**
    - Luego seleccione el **vértice final**
 
-4. **Visualizar Resultado**:
+3. **Visualizar Resultado**:
    - La vértebra se muestra en líneas punteadas rojas
    - Las aristas dirigidas se muestran con flechas púrpura
    - El panel derecho muestra la función generada
 
-5. **Desencriptar Texto** (Opcional):
+4. **Desencriptar Texto** (Opcional):
    - Click en "Activar Desencriptación"
    - Ingrese el texto cifrado
    - Click en "Desencriptar"
@@ -318,7 +318,7 @@ Si la matriz no es invertible módulo 30, se utiliza una matriz diagonal ajustad
 
 ### Algoritmo de Construcción (Modo 2)
 
-1. Usuario ingresa función `f(1),...,f(9)`
+1. Usuario ingresa función `f(1),...,f(n)`
 2. Construir grafo dirigido: `v → f(v)`
 3. Detectar ciclos usando búsqueda de caminos
 4. Identificar vértices en ciclos (vértebra)
