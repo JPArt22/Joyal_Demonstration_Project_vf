@@ -11,15 +11,16 @@ from logic import GraphLogic, CryptoEngine
 class FunctionView(ctk.CTkFrame):
     """Vista para construir árbol a partir de función."""
     
-    def __init__(self, parent, on_back=None):
+    def __init__(self, parent, n=9, on_back=None):
         super().__init__(parent, fg_color="#11111b")
         
-        self.graph_logic = GraphLogic()
-        self.crypto_engine = CryptoEngine()
+        self.n = n
+        self.graph_logic = GraphLogic(n)
+        self.crypto_engine = CryptoEngine(n)
         self.on_back = on_back
         
         # Estado
-        self.funcion = [None] * 9
+        self.funcion = [None] * n
         self.camino_vertebra = None
         self.camino_orden = None
         self.camino_inv = None
@@ -51,7 +52,7 @@ class FunctionView(ctk.CTkFrame):
         
         title = ctk.CTkLabel(
             header,
-            text="Construir Árbol desde Función",
+            text=f"Construir Árbol desde Función (n={self.n})",
             font=("Segoe UI", 22, "bold"),
             text_color="#cdd6f4"
         )
@@ -65,7 +66,7 @@ class FunctionView(ctk.CTkFrame):
         left = ctk.CTkFrame(main, fg_color="#1e1e2e")
         left.pack(side="left", fill="both", expand=True, padx=(0, 10))
         
-        self.canvas = GraphCanvas(left, width=700, height=600)
+        self.canvas = GraphCanvas(left, width=700, height=600, n=self.n)
         self.canvas.pack(padx=20, pady=(30, 10))
         
         # Instrucciones debajo del canvas
@@ -74,7 +75,7 @@ class FunctionView(ctk.CTkFrame):
         
         lbl_instr = ctk.CTkLabel(
             instr_frame,
-            text="Ingrese f(1), f(2), ... f(9) separados por comas. Ejemplo: 1,2,3,6,6,6,7,8,9",
+            text=f"Ingrese f(1), f(2), ... f({self.n}) separados por comas. Ejemplo: {','.join(map(str, range(1, min(self.n+1, 10))))}",
             font=("Segoe UI", 11),
             text_color="#a6adc8",
             justify="center",
@@ -83,7 +84,7 @@ class FunctionView(ctk.CTkFrame):
         lbl_instr.pack(pady=10, padx=15)
         
         # Panel derecho - Controles
-        right = ctk.CTkFrame(main, fg_color="#1e1e2e", width=300)
+        right = ctk.CTkFrame(main, fg_color="#1e1e2e", width=380)
         right.pack(side="right", fill="y")
         right.pack_propagate(False)
         
@@ -143,8 +144,9 @@ class FunctionView(ctk.CTkFrame):
         self.info_scroll = ctk.CTkScrollableFrame(
             info_frame,
             fg_color="#45475a",
-            width=240,
-            height=250
+            width=340,
+            height=250,
+            orientation="both"
         )
         self.info_scroll.pack(padx=10, pady=5, fill="both", expand=True)
         
@@ -236,15 +238,15 @@ class FunctionView(ctk.CTkFrame):
         try:
             valores = [int(x.strip()) for x in texto.split(',')]
             
-            if len(valores) != 9:
-                self.lbl_error.configure(text="Debe ingresar exactamente 9 valores")
+            if len(valores) != self.n:
+                self.lbl_error.configure(text=f"Debe ingresar exactamente {self.n} valores")
                 return
             
-            if not all(1 <= x <= 9 for x in valores):
-                self.lbl_error.configure(text="Los valores deben estar entre 1 y 9")
+            if not all(1 <= x <= self.n for x in valores):
+                self.lbl_error.configure(text=f"Los valores deben estar entre 1 y {self.n}")
                 return
             
-            # Convertir a índices 0-8
+            # Convertir a índices 0-(n-1)
             self.funcion = [v - 1 for v in valores]
             
             # Construir árbol
@@ -285,7 +287,7 @@ class FunctionView(ctk.CTkFrame):
         if self.estado == 0:
             self.canvas.clear_graph()
             # Dibujar solo vértices
-            for i in range(9):
+            for i in range(self.n):
                 self.canvas.draw_vertex(i)
         
         elif self.estado == 1:
@@ -327,7 +329,8 @@ class FunctionView(ctk.CTkFrame):
                 self.info_scroll,
                 text=f"[{func_str}]",
                 font=("Consolas", 13),
-                text_color="#89b4fa"
+                text_color="#89b4fa",
+                wraplength=0
             )
             lbl_func.pack(anchor="w", pady=(0, 10))
             
@@ -346,7 +349,8 @@ class FunctionView(ctk.CTkFrame):
                     self.info_scroll,
                     text=f"[{ciclo_str}]",
                     font=("Consolas", 13),
-                    text_color="#f9e2af"
+                    text_color="#f9e2af",
+                    wraplength=0
                 )
                 lbl_ciclo.pack(anchor="w", pady=(0, 10))
             
@@ -365,7 +369,8 @@ class FunctionView(ctk.CTkFrame):
                     self.info_scroll,
                     text=vert_str,
                     font=("Consolas", 13),
-                    text_color="#f38ba8"
+                    text_color="#f38ba8",
+                    wraplength=0
                 )
                 lbl_vert.pack(anchor="w", pady=(0, 10))
                 
@@ -438,10 +443,10 @@ class FunctionView(ctk.CTkFrame):
     
     def _reset(self):
         """Reinicia la vista."""
-        self.graph_logic = GraphLogic()
-        self.crypto_engine = CryptoEngine()
+        self.graph_logic = GraphLogic(self.n)
+        self.crypto_engine = CryptoEngine(self.n)
         
-        self.funcion = [None] * 9
+        self.funcion = [None] * self.n
         self.camino_vertebra = None
         self.camino_orden = None
         self.camino_inv = None

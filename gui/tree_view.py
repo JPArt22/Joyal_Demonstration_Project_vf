@@ -11,18 +11,19 @@ from logic import GraphLogic, CryptoEngine
 class TreeView(ctk.CTkFrame):
     """Vista para construir función a partir de árbol."""
     
-    def __init__(self, parent, on_back=None):
+    def __init__(self, parent, n=9, on_back=None):
         super().__init__(parent, fg_color="#11111b")
         
-        self.graph_logic = GraphLogic()
-        self.crypto_engine = CryptoEngine()
+        self.n = n
+        self.graph_logic = GraphLogic(n)
+        self.crypto_engine = CryptoEngine(n)
         self.on_back = on_back
         
         # Estado
         self.vertice_1 = None
         self.vertice_ini = None
         self.vertice_fin = None
-        self.funcion = [None] * 9
+        self.funcion = [None] * n
         self.camino_vertebra = None
         self.camino_orden = None
         self.camino_inv = None
@@ -54,7 +55,7 @@ class TreeView(ctk.CTkFrame):
         
         title = ctk.CTkLabel(
             header,
-            text="Construir Función desde Árbol",
+            text=f"Construir Función desde Árbol (n={self.n})",
             font=("Segoe UI", 22, "bold"),
             text_color="#cdd6f4"
         )
@@ -68,7 +69,7 @@ class TreeView(ctk.CTkFrame):
         left = ctk.CTkFrame(main, fg_color="#1e1e2e")
         left.pack(side="left", fill="both", expand=True, padx=(0, 10))
         
-        self.canvas = GraphCanvas(left, width=700, height=600)
+        self.canvas = GraphCanvas(left, width=700, height=600, n=self.n)
         self.canvas.pack(padx=20, pady=(30, 10))
         self.canvas.bind("<Button-1>", self._on_canvas_click)
         
@@ -85,7 +86,7 @@ class TreeView(ctk.CTkFrame):
         # Mensaje de ayuda adicional
         self.lbl_ayuda = ctk.CTkLabel(
             left,
-            text="Click en un vértice, luego en otro para conectarlos.\nEl árbol debe ser completamente conexo (8 aristas).\nNo se permiten ciclos.",
+            text=f"Click en un vértice, luego en otro para conectarlos.\nEl árbol debe ser completamente conexo.\nNo se permiten ciclos.",
             font=("Segoe UI", 11),
             text_color="#a6adc8",
             wraplength=650,
@@ -94,7 +95,7 @@ class TreeView(ctk.CTkFrame):
         self.lbl_ayuda.pack(pady=(0, 20))
         
         # Panel derecho - Info y controles
-        right = ctk.CTkFrame(main, fg_color="#1e1e2e", width=300)
+        right = ctk.CTkFrame(main, fg_color="#1e1e2e", width=380)
         right.pack(side="right", fill="y")
         right.pack_propagate(False)
         
@@ -111,8 +112,9 @@ class TreeView(ctk.CTkFrame):
         scroll = ctk.CTkScrollableFrame(
             right,
             fg_color="#313244",
-            width=260,
-            height=400
+            width=340,
+            height=400,
+            orientation="both"
         )
         scroll.pack(padx=20, pady=10, fill="both", expand=True)
         
@@ -213,7 +215,7 @@ class TreeView(ctk.CTkFrame):
         ]
         
         ayudas = [
-            "Click en un vértice, luego en otro para conectarlos.\nEl árbol debe ser completamente conexo.\nNo se permiten ciclos.",
+            f"Click en un vértice, luego en otro para conectarlos.\nEl árbol debe ser completamente conexo.\nNo se permiten ciclos.",
             "Un ciclo ocurre cuando ya existe un camino entre dos vértices\ny los conecta nuevamente. Reinicie si es necesario.",
             "El vértice inicial será el punto de partida de la vértebra.\nClick en cualquier vértice del árbol.",
             "El vértice final será el punto de llegada de la vértebra.\nSe encontrará el camino entre inicio y fin.",
@@ -256,7 +258,8 @@ class TreeView(ctk.CTkFrame):
                 self.info_container,
                 text=f"[{func_str}]",
                 font=("Consolas", 13),
-                text_color="#89b4fa"
+                text_color="#89b4fa",
+                wraplength=0
             )
             lbl_func.pack(anchor="w", pady=(0, 10))
             
@@ -275,7 +278,8 @@ class TreeView(ctk.CTkFrame):
                     self.info_container,
                     text=vert_str,
                     font=("Consolas", 13),
-                    text_color="#f38ba8"
+                    text_color="#f38ba8",
+                    wraplength=0
                 )
                 lbl_vert.pack(anchor="w", pady=(0, 10))
             
@@ -305,12 +309,12 @@ class TreeView(ctk.CTkFrame):
     def _reset(self):
         """Reinicia la vista."""
         self.graph_logic.reset()
-        self.crypto_engine = CryptoEngine()
+        self.crypto_engine = CryptoEngine(self.n)
         
         self.vertice_1 = None
         self.vertice_ini = None
         self.vertice_fin = None
-        self.funcion = [None] * 9
+        self.funcion = [None] * self.n
         self.camino_vertebra = None
         self.camino_orden = None
         self.camino_inv = None

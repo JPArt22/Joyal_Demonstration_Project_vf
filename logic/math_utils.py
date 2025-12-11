@@ -128,10 +128,18 @@ def is_invertible_mod(mat, mod):
     return math.gcd(det, mod) == 1
 
 
-def get_matrix_from_function(funcion, MOD=30, dim=9):
+def get_matrix_from_function(funcion, MOD=30, dim=None):
     """
-    Genera una matriz invertible 9×9 a partir de una función.
+    Genera una matriz invertible n×n a partir de una función.
+    
+    Args:
+        funcion: Lista de valores de la función
+        MOD: Módulo para operaciones (default 30)
+        dim: Dimensión de la matriz (default: tamaño de la función)
     """
+    if dim is None:
+        dim = len(funcion)
+    
     clean = [(0 if v is None else int(v)) for v in funcion]
     func = [clean[i % len(clean)] for i in range(dim)]
     

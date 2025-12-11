@@ -22,7 +22,7 @@ class GraphCanvas(Canvas):
     COLOR_ARROW = "#cba6f7"
     COLOR_LOOP = "#a6e3a1"
     
-    def __init__(self, parent, width=700, height=700, **kwargs):
+    def __init__(self, parent, width=700, height=700, n=9, **kwargs):
         super().__init__(
             parent,
             width=width,
@@ -32,18 +32,55 @@ class GraphCanvas(Canvas):
             **kwargs
         )
         
-        self.vertice_rad = 24
+        self.n = n
+        self.width = width
+        self.height = height
+        self.vertice_rad = self._calculate_vertex_radius(n)
         # Ajustar el centro hacia abajo para evitar corte del vértice superior
-        self.vertice_pos = self._calculate_positions(width // 2, height // 2 + 30, 250)
+        radius = self._calculate_circle_radius(width, height, n)
+        self.vertice_pos = self._calculate_positions(width // 2, height // 2 + 30, radius, n)
         self.hover_vertex = None
         
         self.bind("<Motion>", self._on_mouse_move)
     
-    def _calculate_positions(self, cx, cy, radius):
+    def _calculate_vertex_radius(self, n):
+        """Calcula el radio de los vértices según n."""
+        if n <= 5:
+            return 28
+        elif n <= 9:
+            return 24
+        elif n <= 12:
+            return 20
+        elif n <= 15:
+            return 18
+        else:
+            return 16
+    
+    def _calculate_circle_radius(self, width, height, n):
+        """Calcula el radio del círculo según n y el tamaño del canvas."""
+        base_radius = min(width, height) // 2 - 50
+        if n <= 5:
+            return int(base_radius * 0.6)
+        elif n <= 9:
+            return int(base_radius * 0.75)
+        elif n <= 12:
+            return int(base_radius * 0.85)
+        else:
+            return int(base_radius * 0.9)
+    
+    def update_n(self, n):
+        """Actualiza el número de vértices y recalcula posiciones."""
+        self.n = n
+        self.vertice_rad = self._calculate_vertex_radius(n)
+        radius = self._calculate_circle_radius(self.width, self.height, n)
+        self.vertice_pos = self._calculate_positions(self.width // 2, self.height // 2 + 30, radius, n)
+        self.delete("all")
+    
+    def _calculate_positions(self, cx, cy, radius, n):
         """Calcula las posiciones de los vértices en círculo."""
         positions = []
-        for i in range(9):
-            angle = math.radians(i * 40)
+        for i in range(n):
+            angle = math.radians(i * (360 / n))
             x = cx + radius * math.sin(angle)
             y = cy - radius * math.cos(angle)
             positions.append((x, y))
@@ -250,7 +287,7 @@ class GraphCanvas(Canvas):
                         self.draw_loop(i)
         
         # Finalmente vértices (siempre encima)
-        for i in range(9):
+        for i in range(self.n):
             highlight = (i == self.hover_vertex)
             self.draw_vertex(i, highlight=highlight)
     

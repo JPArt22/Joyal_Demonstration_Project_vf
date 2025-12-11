@@ -9,15 +9,22 @@ from collections import deque
 class GraphLogic:
     """Clase para manejar toda la lógica de grafos y árboles."""
     
-    def __init__(self):
-        self.parent = list(range(9))
-        self.grafo = [[] for _ in range(9)]
+    def __init__(self, n=9):
+        """
+        Inicializa la lógica de grafos.
+        
+        Args:
+            n: Número de vértices (default 9)
+        """
+        self.n = n
+        self.parent = list(range(n))
+        self.grafo = [[] for _ in range(n)]
         self.aristas = []
         
     def reset(self):
         """Reinicia el estado del grafo."""
-        self.parent = list(range(9))
-        self.grafo = [[] for _ in range(9)]
+        self.parent = list(range(self.n))
+        self.grafo = [[] for _ in range(self.n)]
         self.aristas = []
     
     def find(self, x):
@@ -38,7 +45,7 @@ class GraphLogic:
     def grafoconexo(self):
         """Verifica si el grafo es conexo."""
         root0 = self.find(0)
-        return all(self.find(i) == root0 for i in range(9))
+        return all(self.find(i) == root0 for i in range(self.n))
     
     def agregar_arista(self, v1, v2):
         """Agrega una arista al grafo si no forma ciclo."""
@@ -149,7 +156,7 @@ class GraphLogic:
     
     def construir_funcion_desde_arbol(self, vertice_ini, vertice_fin):
         """Construye una función a partir de un árbol con vértices inicial y final."""
-        funcion = [None] * 9
+        funcion = [None] * self.n
         
         if vertice_ini == vertice_fin:
             aristas_vert = []
@@ -193,7 +200,7 @@ class GraphLogic:
                        for i in range(len(camino_vertebra) - 1)]
         
         aristas_dir = []
-        for i in range(9):
+        for i in range(self.n):
             en_vert = False
             for f in range(len(camino_orden)):
                 if i == camino_orden[f]:

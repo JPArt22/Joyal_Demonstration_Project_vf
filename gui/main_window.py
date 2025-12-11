@@ -38,6 +38,7 @@ class MainWindow(ctk.CTk):
         self.tree_view = None
         self.function_view = None
         self.crypto_view = None
+        self.n_vertices = 9  # Valor por defecto
         
         # Mostrar menú
         self._show_menu()
@@ -103,7 +104,48 @@ class MainWindow(ctk.CTk):
             text_color="#7f849c",
             justify="center"
         )
-        desc.pack(pady=(0, 40))
+        desc.pack(pady=(0, 30))
+        
+        # Selector de número de vértices
+        n_frame = ctk.CTkFrame(center, fg_color="#1e1e2e", corner_radius=10)
+        n_frame.pack(pady=(0, 30))
+        
+        n_label = ctk.CTkLabel(
+            n_frame,
+            text="Número de vértices (n):",
+            font=("Segoe UI", 14, "bold"),
+            text_color="#cdd6f4"
+        )
+        n_label.pack(side="left", padx=(20, 10), pady=15)
+        
+        self.n_slider = ctk.CTkSlider(
+            n_frame,
+            from_=3,
+            to=35,
+            number_of_steps=32,
+            width=200,
+            command=self._on_n_changed
+        )
+        self.n_slider.set(9)
+        self.n_slider.pack(side="left", padx=10, pady=15)
+        
+        self.n_value_label = ctk.CTkLabel(
+            n_frame,
+            text="9",
+            font=("Segoe UI", 16, "bold"),
+            text_color="#89b4fa",
+            width=40
+        )
+        self.n_value_label.pack(side="left", padx=(10, 20), pady=15)
+        
+        n_info = ctk.CTkLabel(
+            center,
+            text=f"T(9) = 9⁷ = {9**7:,} árboles distintos",
+            font=("Segoe UI", 11, "italic"),
+            text_color="#7f849c"
+        )
+        n_info.pack(pady=(0, 20))
+        self.n_info_label = n_info
         
         # Botones
         btn_frame = ctk.CTkFrame(center, fg_color="transparent")
@@ -163,12 +205,25 @@ class MainWindow(ctk.CTk):
         
         return menu
     
+    def _on_n_changed(self, value):
+        """Callback cuando cambia el valor de n."""
+        n = int(value)
+        self.n_vertices = n
+        self.n_value_label.configure(text=str(n))
+        
+        # Actualizar información de Cayley
+        if n <= 15:  # Evitar números muy grandes
+            cayley_result = n ** (n - 2)
+            self.n_info_label.configure(text=f"T({n}) = {n}^{n-2} = {cayley_result:,} árboles distintos")
+        else:
+            self.n_info_label.configure(text=f"T({n}) = {n}^{n-2} árboles distintos")
+    
     def _show_tree_view(self):
         """Muestra la vista de construcción desde árbol."""
         self._clear_view()
         
-        if self.tree_view is None:
-            self.tree_view = TreeView(self, on_back=self._show_menu)
+        # Recrear siempre la vista con el n actual
+        self.tree_view = TreeView(self, n=self.n_vertices, on_back=self._show_menu)
         
         self.current_view = self.tree_view
         self.current_view.pack(fill="both", expand=True)
@@ -177,8 +232,8 @@ class MainWindow(ctk.CTk):
         """Muestra la vista de función."""
         self._clear_view()
         
-        if self.function_view is None:
-            self.function_view = FunctionView(self, on_back=self._show_menu)
+        # Recrear siempre la vista con el n actual
+        self.function_view = FunctionView(self, n=self.n_vertices, on_back=self._show_menu)
         
         self.current_view = self.function_view
         self.current_view.pack(fill="both", expand=True)
@@ -187,8 +242,8 @@ class MainWindow(ctk.CTk):
         """Muestra la vista de encriptación/desencriptación."""
         self._clear_view()
         
-        if self.crypto_view is None:
-            self.crypto_view = CryptoView(self, on_back=self._show_menu)
+        # Recrear siempre la vista con el n actual
+        self.crypto_view = CryptoView(self, n=self.n_vertices, on_back=self._show_menu)
         
         self.current_view = self.crypto_view
         self.current_view.pack(fill="both", expand=True)

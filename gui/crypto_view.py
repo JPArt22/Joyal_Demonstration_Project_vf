@@ -10,12 +10,13 @@ from logic import CryptoEngine
 class CryptoView(ctk.CTkFrame):
     """Vista para encriptación/desencriptación directa."""
     
-    def __init__(self, parent, on_back=None):
+    def __init__(self, parent, n=9, on_back=None):
         super().__init__(parent, fg_color="#11111b")
         
-        self.crypto_engine = CryptoEngine()
+        self.n = n
+        self.crypto_engine = CryptoEngine(n)
         self.on_back = on_back
-        self.funcion = [None] * 9
+        self.funcion = [None] * n
         
         self._setup_ui()
     
@@ -59,12 +60,12 @@ class CryptoView(ctk.CTkFrame):
         
         lbl_instr = ctk.CTkLabel(
             instr_frame,
-            text="INSTRUCCIONES\n\n"
-                 "1. Ingrese una función f(1)...f(9) separada por comas\n"
-                 "2. La función se usará como clave de encriptación\n"
-                 "3. Escriba el texto que desea encriptar o desencriptar\n"
-                 "4. Use los botones correspondientes para procesar\n\n"
-                 "Alfabeto: A-Z, Ñ, espacio, coma, punto (30 caracteres)",
+            text=f"INSTRUCCIONES\n\n"
+                 f"1. Ingrese una función f(1)...f({self.n}) separada por comas\n"
+                 f"2. La función se usará como clave de encriptación\n"
+                 f"3. Escriba el texto que desea encriptar o desencriptar\n"
+                 f"4. Use los botones correspondientes para procesar\n\n"
+                 f"Alfabeto: A-Z, Ñ, espacio, coma, punto (30 caracteres)",
             font=("Segoe UI", 12),
             text_color="#a6adc8",
             justify="left"
@@ -85,7 +86,7 @@ class CryptoView(ctk.CTkFrame):
         
         self.entry_funcion = ctk.CTkEntry(
             func_frame,
-            placeholder_text="Ejemplo: 1,2,3,6,6,6,7,8,9",
+            placeholder_text=f"Ejemplo: {','.join(map(str, range(1, min(self.n+1, 10))))}",
             height=40,
             font=("Segoe UI", 13)
         )
@@ -210,21 +211,21 @@ class CryptoView(ctk.CTkFrame):
         try:
             valores = [int(x.strip()) for x in texto.split(',')]
             
-            if len(valores) != 9:
+            if len(valores) != self.n:
                 self.lbl_func_status.configure(
-                    text="⚠ Debe ingresar exactamente 9 valores",
+                    text=f"⚠ Debe ingresar exactamente {self.n} valores",
                     text_color="#f38ba8"
                 )
                 return
             
-            if not all(1 <= x <= 9 for x in valores):
+            if not all(1 <= x <= self.n for x in valores):
                 self.lbl_func_status.configure(
-                    text="⚠ Los valores deben estar entre 1 y 9",
+                    text=f"⚠ Los valores deben estar entre 1 y {self.n}",
                     text_color="#f38ba8"
                 )
                 return
             
-            # Convertir a índices 0-8
+            # Convertir a índices 0-(n-1)
             self.funcion = [v - 1 for v in valores]
             
             # Configurar clave
