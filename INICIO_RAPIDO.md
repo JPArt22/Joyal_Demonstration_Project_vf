@@ -1,4 +1,4 @@
-# 🚀 Inicio Rápido - Proyecto MD
+# Inicio Rápido - Proyecto MD
 
 ## Ejecución Inmediata
 
@@ -11,10 +11,10 @@ run.bat
 ```
 
 Eso es todo! El script automáticamente:
-- ✅ Verificará Python
-- ✅ Creará entorno virtual
-- ✅ Instalará dependencias
-- ✅ Iniciará la aplicación
+- Verificará Python
+- Creará entorno virtual
+- Instalará dependencias
+- Iniciará la aplicación
 
 ---
 
@@ -54,7 +54,7 @@ JOyal_3/
 
 ### Modo 2: Función → Árbol
 
-1. Ingrese función: `1,2,3,6,6,6,7,8,9`
+1. Ingrese función: `1,2,...,n`
 2. Construya el bosque
 3. Convierta a árbol
 4. ¡Visualice la vértebra!
@@ -65,11 +65,11 @@ JOyal_3/
 
 ## Características Visuales
 
-- 🎨 **Diseño minimalista** oscuro (Catppuccin Mocha)
-- 🔵 **Vértices interactivos** con hover
-- 🔴 **Vértebras destacadas** en rojo punteado
-- 💜 **Aristas dirigidas** con flechas
-- 📊 **Paneles informativos** dinámicos
+- **Diseño minimalista** oscuro (Catppuccin Mocha)
+- **Vértices interactivos** con hover
+- **Vértebras destacadas** en rojo punteado
+- **Aristas dirigidas** con flechas
+- **Paneles informativos** dinámicos
 
 ---
 
@@ -91,14 +91,6 @@ Solo 2 librerías:
 
 ### Ventana no aparece
 → Verifique que no haya firewall bloqueando
-
----
-
-## Contacto y Soporte
-
-📧 Universidad Nacional de Colombia  
-📚 Matemáticas Discretas  
-🎓 Proyecto Educativo
 
 ---
 

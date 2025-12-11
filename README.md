@@ -4,11 +4,11 @@
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Platform](https://img.shields.io/badge/platform-Windows-lightgrey)
 
-## 📋 Descripción
+## Descripción
 
 **Proyecto MD** es una aplicación interactiva de escritorio que implementa la demostración combinatoria de André Joyal para la **Fórmula de Cayley**, la cual establece que existen exactamente $n^{n-2}$ árboles etiquetados con $n$ vértices.
 
-La aplicación permite a los usuarios explorar la biyección entre árboles etiquetados de 9 vértices y funciones $f: V \rightarrow V$, además de implementar un sistema de **cifrado Hill Cipher** de 9×9 basado en las funciones generadas.
+La aplicación permite a los usuarios explorar la biyección entre árboles etiquetados de n vértices y funciones $f: V \rightarrow V$, además de implementar un sistema de **cifrado Hill Cipher** de 9×9 basado en las funciones generadas.
 
 ### Teorema de Cayley
 
@@ -28,7 +28,7 @@ André Joyal proporcionó una elegante demostración biyectiva que establece una
 
 La demostración utiliza el concepto de **vértebra**: un camino simple desde un vértice inicial hasta un vértice final en el árbol, donde todos los demás vértices se dirigen hacia la vértebra.
 
-## ✨ Características
+## Características
 
 ### Funcionalidades Principales
 
@@ -40,7 +40,7 @@ La demostración utiliza el concepto de **vértebra**: un camino simple desde un
    - **Desencriptación** de textos usando la función generada
 
 2. **Construcción de Árbol desde Función**
-   - Ingreso de función como lista de 9 valores
+   - Ingreso de función como lista de n valores
    - Visualización del bosque funcional (con ciclos)
    - Conversión automática a árbol con vértebra
    - Identificación de vértices en ciclos
@@ -61,7 +61,7 @@ La demostración utiliza el concepto de **vértebra**: un camino simple desde un
 - **Navegación intuitiva** entre modos
 - **Paneles informativos** con scroll y actualizaciones en tiempo real
 
-## 🎨 Diseño Visual
+## Diseño Visual
 
 La aplicación utiliza una paleta de colores cuidadosamente seleccionada:
 
@@ -73,7 +73,7 @@ La aplicación utiliza una paleta de colores cuidadosamente seleccionada:
 - **Texto**: `#cdd6f4` (gris claro)
 - **Acentos**: `#a6e3a1` (verde menta)
 
-## 🚀 Instalación y Ejecución
+## Instalación y Ejecución
 
 ### Requisitos del Sistema
 
@@ -135,14 +135,17 @@ numpy>=1.20.0          # Computación numérica y matrices
 customtkinter>=5.0.0   # Interfaz gráfica moderna
 ```
 
-## 📖 Guía de Uso
+## Guía de Uso
+
+### Elegir el número de n vértices que deseamos**
+   - Elija la cantidad de n vértices que desea para continua
 
 ### Modo 1: Construir Función desde Árbol
-
+   
 1. **Conectar Vértices**:
    - Click en un vértice para seleccionarlo
    - Click en otro vértice para conectarlos
-   - Conecte todos los 9 vértices sin formar ciclos (8 aristas)
+   - Conecte todos los vértices sin formar ciclos
 
 2. **Seleccionar Vértices Especiales**:
    - Una vez conectado el árbol, seleccione el **vértice inicial**
@@ -161,10 +164,10 @@ customtkinter>=5.0.0   # Interfaz gráfica moderna
 ### Modo 2: Construir Árbol desde Función
 
 1. **Ingresar Función**:
-   - Ingrese 9 valores separados por comas
-   - Formato: `f(1),f(2),...,f(9)`
-   - Ejemplo: `1,2,3,6,6,6,7,8,9`
-   - Los valores deben estar entre 1 y 9
+   - Ingrese el número de n valores separados por comas
+   - Formato: `f(1),f(2),...,f(n)`
+   - Ejemplo: `1,2,...,n`
+   - Los valores deben estar entre 1 y n
 
 2. **Construir Bosque**:
    - Click en "Construir Bosque"
@@ -180,7 +183,7 @@ customtkinter>=5.0.0   # Interfaz gráfica moderna
    - Ingrese el texto plano
    - Click en "Encriptar"
 
-## 🏗️ Arquitectura del Proyecto
+## Arquitectura del Proyecto
 
 ### Estructura de Directorios
 
@@ -244,7 +247,7 @@ JOyal_3/
 - Bucles (self-loops) con estilo elíptico
 - Detección de hover y eventos de mouse
 
-## 🔐 Criptografía
+## Criptografía
 
 ### Alfabeto Extendido
 
@@ -279,7 +282,7 @@ M[i][j] = (f[i] * (j + 1) + (f[j] + 1)) mod 30
 
 Si la matriz no es invertible módulo 30, se utiliza una matriz diagonal ajustada.
 
-## 🔄 Flujo de la Aplicación
+## Flujo de la Aplicación
 
 ### Diagrama de Flujo General
 
@@ -288,6 +291,7 @@ Si la matriz no es invertible módulo 30, se utiliza una matriz diagonal ajustad
    ↓
 [Menú Principal]
    ├──→ [Modo 1: Función desde Árbol]
+   │      ├──→ Elegir n vértices
    │      ├──→ Conectar vértices
    │      ├──→ Seleccionar inicio/fin
    │      ├──→ Generar función
@@ -304,7 +308,7 @@ Si la matriz no es invertible módulo 30, se utiliza una matriz diagonal ajustad
 
 1. Usuario construye árbol conectando vértices
 2. Validación: No formar ciclos (Union-Find)
-3. Árbol completo: 9 vértices, 8 aristas
+3. Árbol completo: n vértices, n-1 aristas
 4. Selección de vértice inicial `v_i`
 5. Selección de vértice final `v_f`
 6. DFS: Encontrar camino `v_i → v_f` (vértebra)
@@ -314,7 +318,7 @@ Si la matriz no es invertible módulo 30, se utiliza una matriz diagonal ajustad
 
 ### Algoritmo de Construcción (Modo 2)
 
-1. Usuario ingresa función `f(1),...,f(9)`
+1. Usuario ingresa función `f(1),...,f(n)`
 2. Construir grafo dirigido: `v → f(v)`
 3. Detectar ciclos usando búsqueda de caminos
 4. Identificar vértices en ciclos (vértebra)
@@ -322,28 +326,22 @@ Si la matriz no es invertible módulo 30, se utiliza una matriz diagonal ajustad
 6. Resto de vértices forman aristas dirigidas
 7. Visualización: Vértebra + Aristas dirigidas
 
-## 👥 Autores
+## Autores
 
 **Universidad Nacional de Colombia**  
 Facultad de Ingeniería, departamento de Ingeniería de Sistemas e Industrial  
 Bogotá, Colombia
 
-Curso: Matemáticas Discretas  
+Curso: Matemáticas Discretas I 
 Proyecto: Demostración de Joyal a la Fórmula de Cayley
 
 ### Equipo de Desarrollo
 
-- Martin Lora Cano
+- Martin Lora Caro
 - Cristian Andrés Diaz Ortega
 - Jhon Edison Prieto Artunduaga
 
-### Agradecimientos
-
-- **André Joyal**: Por la elegante demostración combinatoria
-- **Arthur Cayley**: Por el teorema fundamental
-- **Comunidad Open Source**: Por las herramientas utilizadas
-
-## 📚 Referencias
+## Referencias
 
 ### Artículos y Publicaciones
 
@@ -361,7 +359,7 @@ Proyecto: Demostración de Joyal a la Fórmula de Cayley
 - [Wikipedia: Hill Cipher](https://en.wikipedia.org/wiki/Hill_cipher)
 - [CustomTkinter Documentation](https://customtkinter.tomschimansky.com/)
 
-## 📄 Licencia
+## Licencia
 
 Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más detalles.
 
@@ -389,7 +387,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-## 🐛 Reporte de Errores y Contribuciones
+## Reporte de Errores y Contribuciones
 
 Si encuentra algún error o desea contribuir al proyecto:
 
@@ -401,18 +399,12 @@ Si encuentra algún error o desea contribuir al proyecto:
    - Push a la rama (`git push origin feature/nueva-caracteristica`)
    - Abra un Pull Request
 
-## 📞 Contacto
+---
 
-**Universidad Nacional de Colombia**  
-Facultad de Ingeniería, departamento de Ingeniería de Sistemas e Industrial  
-Bogotá, Colombia
+**Nota**: Este proyecto es con fines educativos como parte del curso de Matemáticas Discretas I. El sistema de criptografía implementado es una demostración académica y no debe utilizarse para propósitos de seguridad real en producción.
 
 ---
 
-**Nota**: Este proyecto es con fines educativos como parte del curso de Matemáticas Discretas. El sistema de criptografía implementado es una demostración académica y no debe utilizarse para propósitos de seguridad real en producción.
-
----
-
-*Desarrollado con Python 🐍 y CustomTkinter 🎨*
+*Desarrollado con Python y CustomTkinter*
 
 *"Elegancia en la simplicidad" - Filosofía de diseño del proyecto*
