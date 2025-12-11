@@ -401,7 +401,7 @@ Si encuentra algún error o desea contribuir al proyecto:
 
 ---
 
-**Nota**: Este proyecto es con fines educativos como parte del curso de Matemáticas Discretas. El sistema de criptografía implementado es una demostración académica y no debe utilizarse para propósitos de seguridad real en producción.
+**Nota**: Este proyecto es con fines educativos como parte del curso de Matemáticas Discretas I. El sistema de criptografía implementado es una demostración académica y no debe utilizarse para propósitos de seguridad real en producción.
 
 ---
 
