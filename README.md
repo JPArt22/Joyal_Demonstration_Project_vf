@@ -137,8 +137,8 @@ customtkinter>=5.0.0   # Interfaz gráfica moderna
 
 ## Guía de Uso
 
-### Elegir el número de n vértices que deseamos**
-   - Elija la cantidad de n vértices que desea para continua
+### Elegir el número de n vértices que deseamos
+   - Elija la cantidad de n vértices que desea para continua (3 a 35)
 
 ### Modo 1: Construir Función desde Árbol
    
