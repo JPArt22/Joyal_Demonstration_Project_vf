@@ -238,7 +238,7 @@ class CryptoView(ctk.CTkFrame):
             
         except ValueError:
             self.lbl_func_status.configure(
-                text="⚠ Formato inválido. Use números del 1 al n separados por comas",
+                text=f"⚠ Formato inválido. Use números del 1 al {self.n} separados por comas",
                 text_color="#f38ba8"
             )
     
